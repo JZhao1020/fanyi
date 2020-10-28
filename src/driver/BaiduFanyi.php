@@ -96,6 +96,7 @@ class BaiduFanyi
         $param['sign'] = $this->setSign($param);
         if(empty($param['sign']))
             return false;
+
         //同一秒内的数据
         if($this->requestData['requestTime'] == time())
         {

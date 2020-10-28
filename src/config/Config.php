@@ -14,7 +14,7 @@ return [
         'type'=>0,
     ],
     'youdao' => [
-        'url'=>'https://openapi.youdao.com/api',
+        'url'=>'http://openapi.youdao.com/api',
         //appid
         'appid'=>'',
         //秘钥

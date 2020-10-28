@@ -37,7 +37,7 @@ function getTextLang($text, $lang = 'cn', $group = 'default', $config = [], $red
             }
         }
 
-        $res_fanyi = send($config, $text, $config['lang']);
+        $res_fanyi = fanyiSend($config, $text, $config['lang']);
         if(!$res_fanyi){
             // 翻译失败
             return false;
@@ -53,15 +53,11 @@ function getTextLang($text, $lang = 'cn', $group = 'default', $config = [], $red
             $arr = [];
             if($res){
                 $arr = json_decode($res, true);
-                $arr[$text] = $value;
             }
             $arr[$text] = $value;
-            $insert = $redis->hSet($kk, $group, json_encode($arr));
-            if(!$insert){
-                return false;
-            }
+            $redis->hSet($kk, $group, json_encode($arr));
         }
-        
+
         return $fanyi;
     }catch (\Exception $e){
         if($config['debug'] == 'dev'){
@@ -79,8 +75,9 @@ function getTextLang($text, $lang = 'cn', $group = 'default', $config = [], $red
  * @param $lang
  * @return bool|array
  */
-function send($config, $text, $langs){
+function fanyiSend($config, $text, $langs){
     $fanyi = new \fanyi\Fanyi($config);
+
     foreach ($langs as $lang) {
         if($lang == 'cn'){
             // 中文则跳过
@@ -88,6 +85,7 @@ function send($config, $text, $langs){
             continue;
         }
 
+        sleep(1);
         $result[$lang] = $fanyi->gateway('baidu')->send($text, $lang);
         if (!$result[$lang]) {
             $result[$lang] = $fanyi->gateway('youdao')->send($text, $lang);
@@ -98,4 +96,34 @@ function send($config, $text, $langs){
     }
 
     return $result;
+}
+
+/**
+ * 批量导入单种语言对应翻译数据
+ * 示例：
+  $arr = [
+    'default' => [
+        '今天' => '今天',
+    ],
+    'address' => [
+        '地址错误' => '地址错误',
+    ],
+  ];
+ * @param $array
+ * @param string $lang 语言版本
+ * @param string $key redis对应的key
+ * @param array $redis_config redis配置
+ * @return bool
+ */
+function importLang($array, $lang = 'cn', $key = 'lang', $redis_config = []){
+    if(!$array)
+        return false;
+
+    $redis = new \fanyi\lib\Redis($redis_config);
+    $redis_key = $key .':'. $lang;
+    foreach ($array as $key => $val){
+        $arr = is_array($val) ? json_encode($val) : $val;
+        $redis->hSet($redis_key, $key, $arr);
+    }
+    return true;
 }

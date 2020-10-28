@@ -9,7 +9,7 @@ class YoudaoFanyi
 
     protected $options = [
         //接口地址
-        'url'=>'https://openapi.youdao.com/api',
+        'url'=>'http://openapi.youdao.com/api',
         //appid
         'appid'=>'',
         //秘钥
