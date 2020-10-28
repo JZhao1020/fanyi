@@ -1,0 +1,27 @@
+{
+    "name": "hao/fanyi",
+    "homepage": "https://github.com/JZhao1020/fanyi",
+    "description": "内容翻译",
+    "type": "library",
+    "authors": [
+        {
+            "name": "JZ浩",
+            "email": "18816784184@163.com"
+        }
+    ],
+    "keywords": [
+        "Fanyi"
+    ],
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "fanyi\\": "src"
+        },
+        "files": [
+            "src/common.php"
+        ]
+    },
+    "require": {
+        "php": ">=5.6"
+    }
+}
