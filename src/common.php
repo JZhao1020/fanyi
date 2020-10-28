@@ -85,7 +85,6 @@ function fanyiSend($config, $text, $langs){
             continue;
         }
 
-        sleep(1);
         $result[$lang] = $fanyi->gateway('baidu')->send($text, $lang);
         if (!$result[$lang]) {
             $result[$lang] = $fanyi->gateway('youdao')->send($text, $lang);

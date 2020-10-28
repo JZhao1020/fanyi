@@ -49,10 +49,10 @@ class Fanyi{
         }
 
         // 判断配置是否存在
-        if(!isset($this->config[ucfirst($gateway)])){
+        if(!isset($this->config[strtolower($gateway)])){
             throw new \Exception("config [$gateway] is not supported.");
         }
 
-        return new $gateway_class($this->config);
+        return new $gateway_class($this->config[strtolower($gateway)]);
     }
 }
